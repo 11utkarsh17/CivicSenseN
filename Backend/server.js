@@ -1,0 +1,92 @@
+// 🚀 CivicSense API Server - MongoDB Atlas Version
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config(); // Load environment variables
+
+// Debugging: Check if OpenAI key is loaded
+if (process.env.OPENAI_API_KEY) {
+  console.log('✅ OpenAI API Key loaded successfully');
+} else {
+  console.log('❌ OpenAI API Key NOT found in .env');
+}
+
+// Import database connection
+const connectDatabase = require('./config/database');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// 📡 Connect to MongoDB Atlas
+connectDatabase();
+
+// Middleware
+app.use(cors());
+app.use(express.json({ limit: '10mb' })); // Increased limit for base64 images
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Import simple routes
+const authRoutes = require('./routes/auth');
+const issueRoutes = require('./routes/issues');
+const userRoutes = require('./routes/users');
+const categoryRoutes = require('./routes/categories');
+const adminRoutes = require('./routes/admin');
+const { getChatResponse } = require('./utils/chatbot'); // Import AI utility directly
+const { checkLogin } = require('./middleware/auth'); // Import auth middleware
+
+// Use routes
+app.use('/api/auth', authRoutes);
+app.use('/api/issues', issueRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/admin', adminRoutes);
+
+// 🤖 AI Assistant Routes (Added directly to server.js to fix 404)
+app.post('/api/ai/chat', checkLogin, async (req, res) => {
+  try {
+    const { messages } = req.body;
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ success: false, message: 'Invalid message format' });
+    }
+    console.log('🤖 AI Request received directly in server.js...');
+    const aiResponse = await getChatResponse(messages);
+    res.json({ success: true, data: { reply: aiResponse } });
+  } catch (error) {
+    console.error('AI Route error:', error.message);
+    res.status(500).json({ success: false, message: `AI Assistant error: ${error.message}` });
+  }
+});
+
+app.get('/api/ai/test', (req, res) => {
+  res.json({ success: true, message: 'AI Assistant API is online and ready!' });
+});
+
+// Home route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Welcome to CivicSense API!',
+    version: '1.0.0 - Simple Version',
+    available_routes: [
+      'GET  / - This welcome message',
+      'POST /api/auth/register - Register new user',
+      'POST /api/auth/login - Login user',
+      'GET  /api/issues - Get all issues',
+      'POST /api/issues - Create new issue',
+      'GET  /api/categories - Get all categories',
+      'GET  /api/users - Get all users',
+      'GET  /api/admin/dashboard - Admin dashboard',
+      'POST /api/ai/chat - AI Assistant chat'
+    ]
+  });
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 CivicSense Server is running!`);
+  console.log(`📍 Server URL: http://localhost:${PORT}`);
+  console.log(`🔍 Test the API by visiting: http://localhost:${PORT}`);
+  console.log(`\n📋 Available test accounts:`);
+  console.log(`   Admin: admin@civic.com / admin123`);
+  console.log(`   User:  user@civic.com / user123`);
+});
+
+module.exports = app;
