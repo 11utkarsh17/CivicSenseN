@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
   // Auth endpoints
   LOGIN: '/api/auth/login',
   REGISTER: '/api/auth/register',
+  GOOGLE_AUTH: '/api/auth/google',
   
   // Issues endpoints
   ISSUES: '/api/issues',

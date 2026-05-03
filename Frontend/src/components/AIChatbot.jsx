@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { buildApiUrl, API_ENDPOINTS } from '../config/api';
+import { API_ENDPOINTS, apiRequest } from '../config/api';
 import './AIChatbot.css';
 
 // 🎨 Custom SVG Logo: Represents "Observation (Problem) -> Verification (Solution)"
@@ -38,40 +38,27 @@ const AIChatbot = ({ user }) => {
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('authToken');
-      const url = buildApiUrl(API_ENDPOINTS.AI_CHAT);
-      console.log('🤖 AI Chat request to:', url);
-
-      const response = await fetch(url, {
+      console.log('🤖 AI Chat request via apiRequest...');
+      const data = await apiRequest(API_ENDPOINTS.AI_CHAT, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           messages: [...messages, userMessage]
         })
       });
 
-      console.log('🤖 AI Response status:', response.status);
-      
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('🤖 Received non-JSON response:', text);
-        throw new Error(`Server returned non-JSON response (${response.status})`);
-      }
-
-      const data = await response.json();
       if (data.success) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.data.reply }]);
+        // Add a small delay for natural feeling
+        setTimeout(() => {
+          setMessages(prev => [...prev, { role: 'assistant', content: data.data.reply }]);
+          setIsLoading(false);
+        }, 600);
       } else {
         setMessages(prev => [...prev, { role: 'assistant', content: data.message || 'Sorry, I encountered an error. Please try again later.' }]);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { role: 'assistant', content: `Connection error: ${error.message}. Please check if the server is running.` }]);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -100,17 +87,15 @@ const AIChatbot = ({ user }) => {
 
           <div className="chat-messages">
             {messages.map((msg, index) => (
-              <div key={index} className={`message ${msg.role}`}>
-                <div className="message-content">
-                  {msg.content}
-                </div>
+              <div key={index} className={`message-bubble ${msg.role}`}>
+                {msg.content}
               </div>
             ))}
             {isLoading && (
-              <div className="message assistant loading">
-                <div className="typing-indicator">
-                  <span></span><span></span><span></span>
-                </div>
+              <div className="message-bubble assistant typing">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
               </div>
             )}
             <div ref={messagesEndRef} />

@@ -469,7 +469,7 @@ const HomePage = ({ user, onLoginSuccess, onLogout, onNavigateToDashboard }) => 
       </footer>
 
       {/* 🤖 AI Assistant */}
-      <AIChatbot />
+      <AIChatbot user={user} />
 
       <Auth 
         show={showAuth} 

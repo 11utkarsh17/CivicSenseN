@@ -8,17 +8,26 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["civic", "crowdsourcing", "api", "express", "node"],
+  "keywords": [
+    "civic",
+    "crowdsourcing",
+    "api",
+    "express",
+    "node"
+  ],
   "author": "CivicSense Team",
   "license": "MIT",
   "dependencies": {
-    "express": "^5.1.0",
-    "cors": "^2.8.5",
-    "body-parser": "^1.20.2",
-    "dotenv": "^16.0.3",
-    "mongoose": "^8.0.0",
+    "@huggingface/inference": "^4.13.15",
+    "axios": "^1.16.0",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.0"
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^8.0.0",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

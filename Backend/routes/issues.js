@@ -221,7 +221,7 @@ router.get('/:id', async (req, res) => {
 // 🔍 Validate an individual image (AI Image Recognition)
 router.post('/validate-image', checkLogin, async (req, res) => {
   try {
-    const { imageData } = req.body;
+    const { imageData, category, description } = req.body;
     
     if (!imageData) {
       return res.json({
@@ -230,36 +230,8 @@ router.post('/validate-image', checkLogin, async (req, res) => {
       });
     }
 
-    console.log('🔍 Validating single image via manual request...');
-    const classification = await classifyImage(imageData);
-    
-    res.json({
-      success: true,
-      data: classification
-    });
-  } catch (error) {
-    console.error('Error validating image:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error during image validation'
-    });
-  }
-});
-
-// 🔍 Validate an individual image (AI Image Recognition)
-router.post('/validate-image', checkLogin, async (req, res) => {
-  try {
-    const { imageData } = req.body;
-    
-    if (!imageData) {
-      return res.json({
-        success: false,
-        message: 'No image data provided'
-      });
-    }
-
-    console.log('🔍 Validating single image via manual request...');
-    const classification = await classifyImage(imageData);
+    console.log(`🔍 Validating single image via manual request... (Category: ${category || 'N/A'})`);
+    const classification = await classifyImage(imageData, category, description);
     
     res.json({
       success: true,
@@ -304,7 +276,10 @@ router.post('/', checkLogin, async (req, res) => {
 
     // Validate each image
     const processedImages = [];
-    for (const image of images) {
+    console.log(`🛡️ [Backend] Validating ${images.length} images for new issue...`);
+    
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
       // Check if image data exists
       if (!image.data || !image.filename || !image.mimetype || !image.size) {
         return res.json({
@@ -328,6 +303,22 @@ router.post('/', checkLogin, async (req, res) => {
           success: false,
           message: `Image "${image.filename}" has invalid format. Only JPEG, PNG, and WebP are allowed.`
         });
+      }
+
+      // 🔍 Perform AI/ML Validation on each image
+      try {
+        const validation = await classifyImage(image.data, category, description);
+        if (!validation.isValid) {
+          console.warn(`❌ [Backend] Image ${i+1} ("${image.filename}") failed validation: ${validation.message}`);
+          return res.json({
+            success: false,
+            message: `Image validation failed for "${image.filename}": ${validation.message}. Please upload only relevant civic issue photos.`
+          });
+        }
+        console.log(`✅ [Backend] Image ${i+1} validated: ${validation.message}`);
+      } catch (valError) {
+        console.warn(`⚠️ [Backend] Image ${i+1} validation skipped: ${valError.message}`);
+        // We continue if validation fails due to server errors, the "Rescue Mode" handles it inside classifyImage
       }
 
       processedImages.push({

@@ -113,7 +113,11 @@ const UserDashboard = ({ user, onLogout }) => {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ imageData: image.data })
+        body: JSON.stringify({ 
+          imageData: image.data,
+          category: newIssue.category,
+          description: newIssue.description
+        })
       });
       
       console.log('Validation response status:', response.status);
@@ -121,11 +125,13 @@ const UserDashboard = ({ user, onLogout }) => {
       console.log('Validation data received:', data);
       
       if (data.success) {
+        const result = data.data;
         setValidationResults(prev => ({
           ...prev,
           [filename]: { 
-            isValid: data.data.isValid, 
-            message: data.data.message, 
+            isValid: result.isValid, 
+            message: result.message, 
+            isAuthentic: result.isAuthentic !== false, // Default to true if not specified
             loading: false 
           }
         }));
@@ -147,15 +153,6 @@ const UserDashboard = ({ user, onLogout }) => {
 
   useEffect(() => {
     fetchIssues();
-  }, []);
-
-  // Cleanup timeout on component unmount
-  useEffect(() => {
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
   }, []);
 
   // Cleanup timeout on component unmount
@@ -245,7 +242,7 @@ const UserDashboard = ({ user, onLogout }) => {
   const handleUpvote = async (issueId) => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://civicsense-backend-9oc8.onrender.com/api/issues/${issueId}/upvote`, {
+      const response = await fetch(buildApiUrl(API_ENDPOINTS.UPVOTE_ISSUE(issueId)), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -268,7 +265,7 @@ const UserDashboard = ({ user, onLogout }) => {
   const handleDownvote = async (issueId) => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://civicsense-backend-9oc8.onrender.com/api/issues/${issueId}/downvote`, {
+      const response = await fetch(buildApiUrl(API_ENDPOINTS.DOWNVOTE_ISSUE(issueId)), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -291,7 +288,7 @@ const UserDashboard = ({ user, onLogout }) => {
   const handleReportIssue = async (issueId) => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://civicsense-backend-9oc8.onrender.com/api/issues/${issueId}/report`, {
+      const response = await fetch(buildApiUrl(API_ENDPOINTS.REPORT_ISSUE(issueId)), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -320,7 +317,7 @@ const UserDashboard = ({ user, onLogout }) => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://civicsense-backend-9oc8.onrender.com/api/issues/${issueId}/comment`, {
+      const response = await fetch(buildApiUrl(API_ENDPOINTS.COMMENT_ISSUE(issueId)), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

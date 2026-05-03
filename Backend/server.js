@@ -40,14 +40,18 @@ app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/admin', adminRoutes);
 
-// 🤖 AI Assistant Routes (Added directly to server.js to fix 404)
-app.post('/api/ai/chat', checkLogin, async (req, res) => {
+// 🤖 AI Assistant Routes
+app.post('/api/ai/chat', async (req, res) => {
   try {
     const { messages } = req.body;
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ success: false, message: 'Invalid message format' });
     }
-    console.log('🤖 AI Request received directly in server.js...');
+    
+    // Check for auth but don't block guest chat
+    const authHeader = req.headers.authorization;
+    console.log(`🤖 AI Request received (Auth: ${authHeader ? 'Yes' : 'No'})...`);
+    
     const aiResponse = await getChatResponse(messages);
     res.json({ success: true, data: { reply: aiResponse } });
   } catch (error) {

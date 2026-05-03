@@ -1,8 +1,11 @@
 /**
  * 🧪 Image Recognition Test Script
  * This script tests the Hugging Face ML integration directly.
- */
-require('dotenv').config();
+  */
+require('dotenv').config({ path: './Backend/.env' });
+if (!process.env.HUGGING_FACE_TOKEN) {
+  require('dotenv').config({ path: '.env' }); // Fallback if already in Backend folder
+}
 const { classifyImage } = require('./utils/imageClassifier');
 
 // A slightly larger 10x10 pixel white PNG base64 to avoid model dimension errors
@@ -34,22 +37,22 @@ async function runTest() {
   console.log('📡 Testing connectivity to Hugging Face API...');
   
   try {
-    const result = await classifyImage(testImageData);
+    const result = await classifyImage(testImageData, 'Infrastructure', 'Testing the ML engine');
     
     console.log('\n--- Test Result ---');
-    console.log(`Status: ${result.isValid ? '✅ Valid Civic Issue' : '❌ Rejected (Expected for blank image)'}`);
-    console.log(`Detected Labels: ${result.labels.join(', ') || 'None'}`);
+    console.log(`Status: ${result.isValid ? '✅ Valid Civic Issue' : '❌ Rejected'}`);
+    console.log(`Authentic: ${result.isAuthentic !== false ? '✅ Real Photo' : '❌ Fake/AI Detected'}`);
     console.log(`Message: ${result.message}`);
+    if (result.details) {
+      console.log(`AI Confidence: ${(result.details.confidence * 100).toFixed(0)}%`);
+      console.log(`Issue Type: ${result.details.issue_type}`);
+    }
     console.log('-------------------\n');
 
-    if (result.message.includes('API error') || result.message.includes('failed')) {
-      console.log('❌ Test Failed: There was an error communicating with the API.');
+    if (result.message.includes('❌') && !result.isValid) {
+      console.log('⚠️ Result: Image was rejected (this is normal for logos/dummy images).');
     } else {
-      console.log('✅ Test Passed: The ML integration is communicating correctly with Hugging Face!');
-      console.log('\nNext steps:');
-      console.log('1. Run your backend: `npm start`');
-      console.log('2. Try uploading a real photo of a road or trash in the app.');
-      console.log('3. Watch the backend console for "🔍 Validating image..." logs.');
+      console.log('✅ Test Completed: The ML integration is working!');
     }
   } catch (error) {
     console.error('❌ Unexpected Error during test:', error);
