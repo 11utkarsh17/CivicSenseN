@@ -1,6 +1,7 @@
 // 🚀 CivicSense API Server - MongoDB Atlas Version
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 require('dotenv').config(); // Load environment variables
 
 // Debugging: Check if OpenAI key is loaded
@@ -18,11 +19,12 @@ const PORT = process.env.PORT || 5000;
 
 // Health check for Render/Vercel - Must be above database connection for faster startup
 app.get('/health', (req, res) => {
-  res.status(200).send('OK');
+  const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
+  res.status(200).json({ status: 'OK', database: dbStatus });
 });
 
 // 📡 Connect to MongoDB Atlas
-connectDatabase();
+connectDatabase().catch(err => console.error('Database connection error:', err));
 
 // Middleware
 app.use(cors({

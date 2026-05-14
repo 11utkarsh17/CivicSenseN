@@ -9,15 +9,12 @@ const connectDatabase = async () => {
     
     if (!mongoURI) {
       console.error('❌ MONGODB_URI not found in environment variables');
-      console.log('📝 Please add your MongoDB Atlas connection string to .env file');
-      process.exit(1);
+      return; // Don't exit process, let the server start
     }
 
     // Connect to MongoDB Atlas
     console.log('📡 Attempting to connect to MongoDB Atlas...');
-    await mongoose.connect(mongoURI, {
-      serverSelectionTimeoutMS: 5000 // 5 seconds timeout
-    });
+    await mongoose.connect(mongoURI);
 
     console.log('✅ Connected to MongoDB Atlas successfully!');
     console.log(`📍 Database: ${mongoose.connection.name}`);
@@ -25,7 +22,7 @@ const connectDatabase = async () => {
   } catch (error) {
     console.error('❌ MongoDB Atlas connection failed:', error.message);
     console.log('🔍 Check your connection string and network access');
-    process.exit(1);
+    // Don't exit process
   }
 };
 
