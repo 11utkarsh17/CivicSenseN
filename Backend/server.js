@@ -26,20 +26,33 @@ app.get('/health', (req, res) => {
 // 📡 Connect to MongoDB Atlas
 connectDatabase().catch(err => console.error('Database connection error:', err));
 
-// Middleware
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow all origins for production stability
-    callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
-}));
+// 🛡️ [Security] Custom CORS & Preflight Middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // Allow any origin for maximum production compatibility
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle Preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // Log incoming requests for debugging
+  console.log(`📡 [${new Date().toISOString()}] ${req.method} ${req.url} (Origin: ${origin || 'None'})`);
+  next();
+});
 
-// Handle preflight requests explicitly - Fixed for Express 5.x (using regex literal)
-app.options(/.*/, cors());
-app.use(express.json({ limit: '10mb' })); // Increased limit for base64 images
+// Standard body parsers
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Import simple routes
@@ -87,7 +100,7 @@ app.get('/', (req, res) => {
   res.json({ 
     success: true,
     message: 'Welcome to CivicSense API!',
-    version: '2.0.1 - AI & Unified Auth Ready',
+    version: '2.0.2 - Custom CORS & Preflight Ready',
     status: 'Online',
     timestamp: new Date().toISOString()
   });
