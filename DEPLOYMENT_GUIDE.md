@@ -1,47 +1,37 @@
-# 🚀 CivicSense Deployment Guide (Free)
+# 🚀 CivicSense Deployment Guide (Vercel Only - Recommended)
 
-This guide will help you deploy your full-stack project for free using **Render** (Backend) and **Vercel** (Frontend).
+Since Render's free tier can be unstable (502 errors), you can now deploy **both** your Frontend and Backend to Vercel for a much smoother experience.
 
-## 🛠️ Step 1: Backend Deployment (Render)
-
-1. **Create a Account**: Go to [Render.com](https://render.com/) and sign up with GitHub.
-2. **New Web Service**: Click **New +** -> **Web Service**.
-3. **Connect Repo**: Select your `CivicSenseN` repository.
-4. **Settings**:
-   - **Name**: `civicsense-backend`
-   - **Environment**: `Node`
-   - **Root Directory**: `Backend`
-   - **Build Command**: `npm install`
-   - **Start Command**: `node server.js`
-   - **Plan**: `Free`
-5. **Environment Variables**: Click **Advanced** -> **Add Environment Variable**:
-   - `MONGODB_URI`: (Your MongoDB Atlas connection string)
-   - `JWT_SECRET`: (Your secret key)
-   - `OPENAI_API_KEY`: (Your OpenAI key)
-   - `HUGGING_FACE_TOKEN`: (Your Hugging Face token)
-   - `FRONTEND_URL`: `https://civic-sense-n.vercel.app`
-   - `PORT`: `10000` (Render default)
-
-## 🎨 Step 2: Frontend Deployment (Vercel)
+## 🎨 Step 1: Deploy Everything to Vercel
 
 1. **Create Account**: Go to [Vercel.com](https://vercel.com/) and sign up with GitHub.
 2. **Import Project**: Click **Add New** -> **Project**.
 3. **Connect Repo**: Select your `CivicSenseN` repository.
 4. **Settings**:
-   - **Framework Preset**: `Vite`
-   - **Root Directory**: `Frontend`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-5. **Environment Variables**: Add:
-   - `VITE_API_BASE_URL`: `https://civicsensen.onrender.com`
+   - **Framework Preset**: `Other` (Vercel will use the `vercel.json` we created).
+   - **Root Directory**: Select the **Project Root** (not the Frontend or Backend folders).
+5. **Environment Variables**: Add all your keys here:
+   - `MONGODB_URI`: (Your MongoDB Atlas connection string)
+   - `JWT_SECRET`: (Your secret key)
+   - `OPENAI_API_KEY`: (Your OpenAI key)
+   - `HUGGING_FACE_TOKEN`: (Your Hugging Face token)
+   - `NODE_ENV`: `production`
+   - `VITE_API_BASE_URL`: (Leave empty or set to `/` if using Vercel for both)
 6. **Deploy**: Click **Deploy**.
 
-## 🔄 Step 3: Final Verification
+## 🔄 Step 2: Benefits of Vercel Backend
+- **No 502 Errors**: Vercel uses Serverless Functions, which scale automatically.
+- **No Sleep**: Your API will respond faster than Render's free tier.
+- **Unified URL**: Your Frontend and Backend will live on the same domain (e.g., `https://civicsense.vercel.app/api/...`).
 
-Once both are deployed:
-1. Visit [https://civic-sense-n.vercel.app/](https://civic-sense-n.vercel.app/)
-2. Try to **Login** or **Register**.
-3. If the login works, your full-stack deployment is successful!
+---
+
+## 🛠️ (Optional) If you still want to use Render for Backend
+If you prefer Render for the backend:
+1. Ensure your **Root Directory** is set to `Backend`.
+2. Check your **Logs** on Render to see why it's crashing.
+3. Make sure `MONGODB_URI` is correct; if it can't connect, the server will exit and give a 502.
+
 
 
 ---
