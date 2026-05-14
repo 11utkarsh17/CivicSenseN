@@ -21,9 +21,17 @@ connectDatabase();
 
 // Middleware
 app.use(cors({
-  origin: true, // Allow all origins in production for easier debugging
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow all origins for production stability
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
+
+// Handle preflight requests explicitly
+app.options('*', cors());
 app.use(express.json({ limit: '10mb' })); // Increased limit for base64 images
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
