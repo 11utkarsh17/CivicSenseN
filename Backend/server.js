@@ -82,30 +82,22 @@ app.get('/api/ai/test', (req, res) => {
 // Home route
 app.get('/', (req, res) => {
   res.json({ 
+    success: true,
     message: 'Welcome to CivicSense API!',
-    version: '1.0.0 - Simple Version',
-    available_routes: [
-      'GET  / - This welcome message',
-      'POST /api/auth/register - Register new user',
-      'POST /api/auth/login - Login user',
-      'GET  /api/issues - Get all issues',
-      'POST /api/issues - Create new issue',
-      'GET  /api/categories - Get all categories',
-      'GET  /api/users - Get all users',
-      'GET  /api/admin/dashboard - Admin dashboard',
-      'POST /api/ai/chat - AI Assistant chat'
-    ]
+    status: 'Online',
+    timestamp: new Date().toISOString()
   });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 CivicSense Server is running!`);
-  console.log(`📍 Server URL: http://localhost:${PORT}`);
-  console.log(`🔍 Test the API by visiting: http://localhost:${PORT}`);
-  console.log(`\n📋 Available test accounts:`);
-  console.log(`   Admin: admin@civic.com / admin123`);
-  console.log(`   User:  user@civic.com / user123`);
+  console.log(`🚀 CivicSense Server is running on port ${PORT}!`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`📍 Local URL: http://localhost:${PORT}`);
+    console.log(`\n📋 Available test accounts:`);
+    console.log(`   Admin: admin@civic.com / admin123`);
+    console.log(`   User:  user@civic.com / user123`);
+  }
 });
 
 module.exports = app;
