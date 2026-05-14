@@ -77,9 +77,15 @@ app.get('/', (req, res) => {
   });
 });
 
+// Health check for Render/Vercel
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 CivicSense Server is running on port ${PORT}!`);
+  console.log(`📡 Listening on 0.0.0.0:${PORT}`);
   if (process.env.NODE_ENV !== 'production') {
     console.log(`📍 Local URL: http://localhost:${PORT}`);
     console.log(`\n📋 Available test accounts:`);
