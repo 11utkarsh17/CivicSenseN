@@ -72,6 +72,7 @@ app.get('/', (req, res) => {
   res.json({ 
     success: true,
     message: 'Welcome to CivicSense API!',
+    version: '2.0.1 - AI & Unified Auth Ready',
     status: 'Online',
     timestamp: new Date().toISOString()
   });

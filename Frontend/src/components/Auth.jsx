@@ -162,8 +162,14 @@ const Auth = ({ show, onHide, onLogin }) => {
         setMessage({ type: 'error', text: data.message });
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Network error. Please try again.' });
-      console.error('Auth error:', error);
+      console.error('Auth error detail:', error);
+      const isConnectionError = error.message.includes('fetch') || error.message.includes('NetworkError') || !error.response;
+      setMessage({ 
+        type: 'error', 
+        text: isConnectionError 
+          ? `Connection failed. Is the backend URL (${buildApiUrl('')}) correct and online?` 
+          : 'Network error. Please try again.' 
+      });
     } finally {
       setIsLoading(false);
     }
@@ -240,7 +246,11 @@ const Auth = ({ show, onHide, onLogin }) => {
           setMessage({ type: 'error', text: data.message });
         }
       } catch (error) {
-        setMessage({ type: 'error', text: 'Google auth failed.' });
+        console.error('Google Auth error detail:', error);
+        setMessage({ 
+          type: 'error', 
+          text: `Google auth failed. Backend (${buildApiUrl('')}) unreachable.` 
+        });
       } finally {
         setIsLoading(false);
       }
