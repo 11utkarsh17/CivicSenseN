@@ -16,6 +16,11 @@ const connectDatabase = require('./config/database');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Health check for Render/Vercel - Must be above database connection for faster startup
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // 📡 Connect to MongoDB Atlas
 connectDatabase();
 
@@ -86,21 +91,11 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health check for Render/Vercel
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
-
 // Start server
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 CivicSense Server is running on port ${PORT}!`);
   console.log(`📡 Listening on 0.0.0.0:${PORT}`);
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`📍 Local URL: http://localhost:${PORT}`);
-    console.log(`\n📋 Available test accounts:`);
-    console.log(`   Admin: admin@civic.com / admin123`);
-    console.log(`   User:  user@civic.com / user123`);
-  }
 });
 
-module.exports = app;
+// Remove duplicate listener further down
+// module.exports = app;
