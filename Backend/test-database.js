@@ -12,10 +12,7 @@ async function testDatabase() {
     console.log('🔍 Testing MongoDB Atlas Integration...\n');
 
     // Connect to database
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
 
     console.log('✅ Connected to MongoDB Atlas successfully!\n');
 

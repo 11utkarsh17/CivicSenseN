@@ -11,10 +11,7 @@ async function addSampleIssues() {
     console.log('🔍 Adding sample issues for admin dashboard testing...\n');
 
     // Connect to database
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
 
     console.log('✅ Connected to MongoDB Atlas!\n');
 
