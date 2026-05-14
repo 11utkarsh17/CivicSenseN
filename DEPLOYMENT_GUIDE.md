@@ -1,78 +1,50 @@
-# 🚀 DEPLOYMENT GUIDE - Localhost URLs to Update
+# 🚀 CivicSense Deployment Guide (Free)
 
-## Frontend Files with localhost URLs:
+This guide will help you deploy your full-stack project for free using **Render** (Backend) and **Vercel** (Frontend).
 
-### 1. UserDashboard.jsx (5 instances)
-- Line 51: `http://localhost:5000/api/issues` (fetch issues)
-- Line 169: `http://localhost:5000/api/issues/${issueId}/upvote` (upvote)  
-- Line 192: `http://localhost:5000/api/issues/${issueId}/downvote` (downvote)
-- Line 215: `http://localhost:5000/api/issues/${issueId}/report` (report)
-- Line 244: `http://localhost:5000/api/issues/${issueId}/comment` (comment)
-- Line 449: `http://localhost:5000/api/issues` (post new issue)
+## 🛠️ Step 1: Backend Deployment (Render)
 
-### 2. AdminDashboard.jsx (2 instances)
-- Line 16: `http://localhost:5000/api/issues` (fetch all issues)
-- Line 49: `http://localhost:5000/api/issues/${issueId}/status` (update status)
+1. **Create a Account**: Go to [Render.com](https://render.com/) and sign up with GitHub.
+2. **New Web Service**: Click **New +** -> **Web Service**.
+3. **Connect Repo**: Select your `CivicSenseN` repository.
+4. **Settings**:
+   - **Name**: `civicsense-backend`
+   - **Environment**: `Node`
+   - **Root Directory**: `Backend`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node server.js`
+   - **Plan**: `Free`
+5. **Environment Variables**: Click **Advanced** -> **Add Environment Variable**:
+   - `MONGODB_URI`: (Your MongoDB Atlas connection string)
+   - `JWT_SECRET`: (Your secret key)
+   - `OPENAI_API_KEY`: (Your OpenAI key)
+   - `HUGGING_FACE_TOKEN`: (Your Hugging Face token)
+   - `FRONTEND_URL`: (You will get this after Step 2)
+   - `PORT`: `10000` (Render default)
 
-### 3. vite.config.js (1 instance)
-- Line 11: `target: 'http://localhost:5000'` (proxy configuration)
+## 🎨 Step 2: Frontend Deployment (Vercel)
 
-## Backend Files (Console logs only - not critical):
-- Backend/server.js: Lines 54-55 (console messages)
-- Backend/.env.example: Line 31 (frontend URL reference)
+1. **Create Account**: Go to [Vercel.com](https://vercel.com/) and sign up with GitHub.
+2. **Import Project**: Click **Add New** -> **Project**.
+3. **Connect Repo**: Select your `CivicSenseN` repository.
+4. **Settings**:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `Frontend`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+5. **Environment Variables**: Add:
+   - `VITE_API_BASE_URL`: (The URL you get from Render in Step 1, e.g., `https://civicsense-backend.onrender.com`)
+6. **Deploy**: Click **Deploy**.
 
-## 🛠️ DEPLOYMENT OPTIONS:
+## 🔄 Step 3: Connect Them
 
-### Option 1: Manual Replacement (Quick & Simple)
-Replace all `http://localhost:5000` with your production API URL:
-- Find: `http://localhost:5000`  
-- Replace: `https://your-backend-api.herokuapp.com` (or your deployment URL)
+Once your Frontend is deployed (e.g., `https://civicsense.vercel.app`):
+1. Go back to your **Render Backend Dashboard**.
+2. Add/Update the `FRONTEND_URL` environment variable with your Vercel URL.
+3. Restart the Backend service.
 
-### Option 2: Use the API Config System (Recommended)
-I've created `Frontend/src/config/api.js` for you. To use it:
+---
 
-1. **Set Environment Variable:**
-   ```bash
-   # Create Frontend/.env file
-   VITE_API_URL=https://your-backend-api.herokuapp.com
-   ```
-
-2. **Import and use in components:**
-   ```javascript
-   import { buildApiUrl, API_ENDPOINTS } from '../config/api';
-   
-   // Instead of: 'http://localhost:5000/api/issues'
-   // Use: buildApiUrl(API_ENDPOINTS.ISSUES)
-   ```
-
-### Option 3: Platform-Specific Environment Variables
-Set `VITE_API_URL` in your deployment platform:
-
-**Vercel:**
-```bash
-vercel env add VITE_API_URL
-```
-
-**Netlify:**
-```bash
-netlify env:set VITE_API_URL https://your-backend-api.herokuapp.com
-```
-
-**Railway/Heroku:**
-Add in dashboard: `VITE_API_URL=https://your-backend-api.herokuapp.com`
-
-## 🎯 RECOMMENDED QUICK FIX:
-
-For immediate deployment, do a global find & replace:
-1. Open VS Code
-2. Press Ctrl+Shift+H (Find and Replace in Files) 
-3. Find: `http://localhost:5000`
-4. Replace: `https://YOUR-ACTUAL-BACKEND-URL.com`
-5. Replace All in Frontend folder only
-
-## 📝 IMPORTANT NOTES:
-
-- Auth.jsx already uses relative URLs (✅ Ready for deployment)
-- Backend server.js console logs don't affect functionality
-- Update vite.config.js proxy for development only
-- Remember to update CORS settings in backend for production domain
+### 📝 Important Notes:
+- **Free Tier Sleep**: Render's free tier "sleeps" after 15 minutes of inactivity. The first request after a break might take 30-50 seconds to wake up the server.
+- **MongoDB Atlas**: Ensure your MongoDB Atlas Network Access is set to `0.0.0.0/0` (Allow access from anywhere) so Render can connect.

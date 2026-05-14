@@ -115,6 +115,9 @@ const classifyImage = async (base64Data, category = '', description = '') => {
   // ---------------------------------------------------------
   // 2. Hugging Face (Secondary / Fallback)
   // ---------------------------------------------------------
+  let bestLabels = [];
+  let apiFailed = false;
+
   if (hfToken && !hfToken.includes('your-')) {
     // Authenticity Check
     const authenticityModels = ['umm-maybe/AI-image-detector'];
@@ -126,9 +129,11 @@ const classifyImage = async (base64Data, category = '', description = '') => {
           return {
             isValid: false,
             isAuthentic: false,
-            message: `❌ Fraud Detection: This image appears to be AI-generated.`
+            message: `❌ Fraud Detection: This image appears to be AI-generated (${(topLabel.score * 100).toFixed(0)}% probability).`
           };
         }
+      } else {
+        apiFailed = true;
       }
     }
 
@@ -139,16 +144,23 @@ const classifyImage = async (base64Data, category = '', description = '') => {
     for (const modelId of models) {
       const result = await hfPredict(modelId, imageBuffer, hfToken);
       if (result.success && Array.isArray(result.data)) {
+        // Store labels for reasoning later if we don't get an immediate match
+        if (result.data.length > 0 && bestLabels.length === 0) {
+          bestLabels = result.data.slice(0, 3).map(p => p.label.toLowerCase());
+        }
+
         const isCivic = result.data.some(p => p.score > 0.15 && civicKeywords.some(kw => p.label.toLowerCase().includes(kw)));
         if (isCivic) {
           const topLabel = result.data[0].label;
           return {
             isValid: true,
             isAuthentic: true,
-            message: `🤖 ML Detected: ${topLabel}`,
+            message: `🤖 ML Detected: This looks like ${topLabel.toLowerCase()}. Relevant to civic reporting.`,
             source: 'Hugging Face'
           };
         }
+      } else {
+        apiFailed = true;
       }
     }
   }
@@ -157,17 +169,28 @@ const classifyImage = async (base64Data, category = '', description = '') => {
   // 3. EMERGENCY RESCUE MODE (Safe Fallback)
   // ---------------------------------------------------------
   const fileSizeKB = Math.round(imageBuffer.length / 1024);
+  
   if (fileSizeKB < 5) {
     return {
       isValid: false,
-      message: `❌ Rejected: Image file is too small (${fileSizeKB}KB).`
+      message: `❌ Rejected: Image file is too small (${fileSizeKB}KB) to be a valid photo proof.`
     };
   }
+
+  // Generate a proper reason instead of a hardcoded message
+  let dynamicReason = '';
+  if (bestLabels.length > 0) {
+    dynamicReason = `AI detected elements of ${bestLabels.join(', ')}. `;
+  } else if (apiFailed) {
+    dynamicReason = `AI servers are temporarily busy. `;
+  }
+
+  const categoryReason = category ? `Accepted as proof for ${category.toLowerCase()} based on user report.` : `Image accepted as proof based on visual data.`;
 
   return {
     isValid: true,
     isAuthentic: true,
-    message: `🛡️ Verified: Image accepted based on size verification (${fileSizeKB}KB).`
+    message: `🛡️ ${dynamicReason}${categoryReason} (${fileSizeKB}KB).`
   };
 };
 

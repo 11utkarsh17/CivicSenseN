@@ -8,7 +8,7 @@ const config = {
       : 'http://localhost:5000'
   },
   production: {
-    API_BASE_URL: '' // Use relative path for production builds (same origin)
+    API_BASE_URL: import.meta.env.VITE_API_BASE_URL || '' // Production Backend URL
   }
 };
 
