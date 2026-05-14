@@ -1,0 +1,12 @@
+{
+  "name": "civicsense-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "frontend-install": "cd Frontend && npm install",
+    "backend-install": "cd Backend && npm install",
+    "install-all": "npm run frontend-install && npm run backend-install",
+    "frontend-build": "cd Frontend && npm run build",
+    "backend-start": "cd Backend && npm start"
+  }
+}

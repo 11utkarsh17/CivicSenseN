@@ -8,7 +8,10 @@ const config = {
       : 'http://localhost:5000'
   },
   production: {
-    API_BASE_URL: import.meta.env.VITE_API_BASE_URL || '' // Production Backend URL
+    // If we are on Vercel and haven't set a specific backend URL, use relative paths.
+    // This allows the unified Vercel deployment to work automatically.
+    API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 
+                 (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app') ? '' : '')
   }
 };
 
