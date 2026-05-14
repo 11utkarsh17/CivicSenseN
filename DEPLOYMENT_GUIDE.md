@@ -19,7 +19,7 @@ This guide will help you deploy your full-stack project for free using **Render*
    - `JWT_SECRET`: (Your secret key)
    - `OPENAI_API_KEY`: (Your OpenAI key)
    - `HUGGING_FACE_TOKEN`: (Your Hugging Face token)
-   - `FRONTEND_URL`: (You will get this after Step 2)
+   - `FRONTEND_URL`: `https://civic-sense-n.vercel.app`
    - `PORT`: `10000` (Render default)
 
 ## 🎨 Step 2: Frontend Deployment (Vercel)
@@ -33,15 +33,16 @@ This guide will help you deploy your full-stack project for free using **Render*
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 5. **Environment Variables**: Add:
-   - `VITE_API_BASE_URL`: (The URL you get from Render in Step 1, e.g., `https://civicsense-backend.onrender.com`)
+   - `VITE_API_BASE_URL`: `https://civicsensen.onrender.com`
 6. **Deploy**: Click **Deploy**.
 
-## 🔄 Step 3: Connect Them
+## 🔄 Step 3: Final Verification
 
-Once your Frontend is deployed (e.g., `https://civicsense.vercel.app`):
-1. Go back to your **Render Backend Dashboard**.
-2. Add/Update the `FRONTEND_URL` environment variable with your Vercel URL.
-3. Restart the Backend service.
+Once both are deployed:
+1. Visit [https://civic-sense-n.vercel.app/](https://civic-sense-n.vercel.app/)
+2. Try to **Login** or **Register**.
+3. If the login works, your full-stack deployment is successful!
+
 
 ---
 
