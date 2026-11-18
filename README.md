@@ -1,67 +1,127 @@
 # CivicSense 🏙️
-### AI-Powered Civic Issue Reporting & Prioritization
+### A Smart Platform for Reporting and Managing Civic Issues
 
-CivicSense is a civic-tech platform designed to make reporting and addressing public infrastructure problems more efficient, transparent, and community-driven. It helps citizens report issues such as potholes, damaged roads, overflowing garbage, and other public inconveniences while using AI-assisted verification and prioritization to make reports more actionable.
+CivicSense is a web-based civic issue reporting and management platform designed to bridge the gap between citizens and municipal authorities. It enables citizens to report everyday civic problems such as potholes, garbage accumulation, broken streetlights, water leakage, and damaged public infrastructure through a centralized digital platform.
 
-The platform aims to bridge the gap between citizens and local authorities by turning individual complaints into organized, data-driven insights about community needs.
+The platform combines complaint management, image recognition, chatbot assistance, and issue tracking to make civic reporting more accessible, organized, and transparent.
 
-## 🚀 Key Features
+## 📌 Problem Statement
 
-- **AI-Assisted Image Verification** – Analyze uploaded images to help verify civic issues and reduce irrelevant or duplicate reports.
-- **Location-Based Reporting** – Associate reports with geographic locations to identify and track problems in specific areas.
-- **Community Voting** – Allow citizens to support reported issues, helping highlight problems affecting more people.
-- **Smart Issue Prioritization** – Prioritize complaints using factors such as severity, urgency, public impact, and community engagement.
-- **Issue Categorization** – Organize complaints into categories such as roads, sanitation, drainage, and public infrastructure.
-- **Data-Driven Insights** – Transform civic reports into useful information for identifying recurring problems and areas requiring attention.
+Many civic issues remain unresolved due to inefficient complaint reporting systems, limited communication between citizens and authorities, lack of transparency, and delays in follow-up. Traditional complaint methods often make it difficult for citizens to track progress or ensure accountability.
 
-## 🎯 Objective
+CivicSense addresses these challenges by providing a unified digital platform for reporting, validating, monitoring, and managing civic complaints.
 
-CivicSense aims to:
+## 🚀 Features
 
-- Encourage citizen participation in improving public spaces.
-- Make civic problem reporting more accessible and structured.
-- Help identify high-impact infrastructure issues.
-- Improve transparency in how community concerns are highlighted.
-- Support smarter decision-making through data and AI.
+- **Civic Issue Reporting** – Submit civic complaints with images and detailed descriptions.
+- **AI-Based Image Recognition** – Validate uploaded images to identify relevant civic issues and reduce invalid reports.
+- **Complaint Tracking** – Monitor complaint progress through status updates.
+- **Admin Dashboard** – Manage, categorize, review, and update reported complaints.
+- **AI Chatbot Assistance** – Help users navigate the platform and understand the complaint submission process.
+- **Centralized Database** – Store complaint details, images, categories, locations, timestamps, and statuses.
+- **Issue Categorization** – Organize reports into categories such as potholes, garbage, streetlights, and water leakage.
+- **Data Analysis** – Identify complaint patterns, recurring issues, and areas requiring attention.
 
 ## 🔄 How It Works
 
-1. **Report an issue** – A citizen uploads an image and describes a civic problem.
-2. **Verification** – The uploaded image and report are analyzed to assess whether they represent a relevant civic issue.
-3. **Location tagging** – The issue is associated with its location for area-based tracking.
-4. **Community engagement** – Other users can support or vote on reported issues.
-5. **Prioritization** – Reports are ranked based on severity, urgency, public impact, and community support.
-6. **Actionable insights** – Organized reports help identify recurring issues and areas that need attention.
+1. A citizen registers or logs into the platform.
+2. The user submits a civic issue with an image, description, and location details.
+3. The image recognition module checks whether the uploaded image represents a relevant civic issue.
+4. Verified complaints are stored in the centralized database.
+5. Authorities access complaints through the admin dashboard.
+6. Complaint status is updated as the issue progresses.
+7. Citizens can track the status of their complaints.
+8. The chatbot provides assistance throughout the user interaction process.
 
-## 🏗️ Proposed Prioritization Factors
+## 🧠 AI & Machine Learning
 
-| Factor | Purpose |
+CivicSense incorporates machine learning techniques for image-based civic issue validation.
+
+### Image Recognition
+- Convolutional Neural Networks (CNN)
+- Image preprocessing and normalization
+- Image classification and validation
+- Training and testing datasets
+- Performance evaluation using classification metrics
+
+### Chatbot
+- Natural Language Processing (NLP)
+- Interactive user assistance
+- Complaint submission guidance
+- Query handling
+
+## 📊 Model Performance
+
+The project report presents the following image recognition evaluation metrics:
+
+| Metric | Score |
+|---|---:|
+| Accuracy | 88% |
+| Precision | 85% |
+| Recall | 84% |
+| F1-Score | 84% |
+
+These metrics are used to evaluate the model's ability to identify and validate civic issue images.
+
+## 🏗️ System Architecture
+
+The platform follows a multi-layered architecture consisting of:
+
+- **Frontend:** User interface for complaint submission, issue browsing, and tracking.
+- **Backend:** Handles APIs, authentication, application logic, and communication between modules.
+- **Database:** Stores user information, complaints, images, categories, locations, and status updates.
+- **Image Recognition Module:** Processes and validates uploaded civic issue images.
+- **Chatbot Module:** Assists users and responds to common queries.
+- **Admin Dashboard:** Enables authorities to manage complaints and monitor resolution progress.
+
+## 🛠️ Technology Stack
+
+| Component | Technology |
 |---|---|
-| Severity | Measures how serious the reported problem is |
-| Urgency | Estimates how quickly the issue needs attention |
-| Public Impact | Evaluates how many people may be affected |
-| Community Votes | Reflects citizen support and engagement |
-| Location | Helps identify local clusters of recurring issues |
+| Frontend | React.js / Next.js |
+| Backend | Node.js |
+| Database | MongoDB |
+| Programming Languages | JavaScript, Python |
+| AI/ML | CNN, Image Recognition, NLP |
+| Tools | Git, GitHub, VS Code |
 
-## 🌍 Impact
+## 🎯 Objectives
 
-CivicSense focuses on building a more responsive and participatory approach to urban problem-solving. By combining citizen reporting, AI-assisted verification, and community-driven prioritization, it aims to make civic concerns easier to identify and harder to overlook.
+- Simplify civic issue reporting for citizens.
+- Establish a centralized complaint management system.
+- Improve transparency through complaint tracking.
+- Reduce invalid reports through image verification.
+- Improve citizen-authority communication.
+- Support efficient civic issue management using technology.
+
+## 🌍 Applications
+
+- Municipal corporations and local government bodies
+- Smart city initiatives
+- Urban infrastructure monitoring
+- Community-driven civic engagement
+- Public sanitation and road maintenance management
 
 ## 🔮 Future Scope
 
-- Real-time civic issue tracking
+- GPS-based location tracking
+- Interactive maps and civic issue heatmaps
 - Duplicate complaint detection
-- Interactive maps and heatmaps
-- Automated issue classification
-- Analytics dashboards for civic authorities
-- Status tracking from reporting to resolution
-- Multilingual support for wider accessibility
-- Integration with municipal complaint systems
+- Mobile application development
+- Multilingual support
+- Advanced AI-based issue classification
+- Predictive analysis of recurring civic issues
+- Integration with municipal/government complaint systems
+- Automated notifications and resolution updates
 
-## 🤝 Vision
+## 🤝 Team Project
 
-To empower citizens to contribute to better communities and help make public infrastructure safer, cleaner, and more accountable through technology.
+Developed as an academic project for the Bachelor of Technology in Computer Science at **Noida Institute of Engineering and Technology (NIET), Greater Noida**.
+
+## 💡 Vision
+
+To create a more connected, transparent, and responsive civic ecosystem where citizens can actively contribute to improving their communities through technology.
 
 ---
 
-**CivicSense — Your voice. Your city. Your change.**
+**CivicSense — Small Issues, Big Impact. Let's Fix Them Together.**
